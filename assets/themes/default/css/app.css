@@ -1,0 +1,24 @@
+body {
+  background: url(../retina_wood.png);
+}
+
+table, .panel {
+  background: rgba(255,255,255,0.85);
+}
+
+.doc {
+  clear: both;
+  border-bottom: 1px #ddd solid;
+}
+
+.doc-field {
+  display: block;
+}
+
+.doc-title {
+  font-style: italic;
+}
+
+.form-control-half {
+  width: 50%;
+}

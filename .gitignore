@@ -1,0 +1,3 @@
+.DS_*
+.htacces
+application/config/database.php
