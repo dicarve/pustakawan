@@ -23,7 +23,14 @@ ob_start();
 ?>
 <div class="panel panel-default">
 <div class="panel-body">
-<p><button class="btn btn-warning btn-back"> Back to previous page</button></p>
+<p><button class="btn btn-warning btn-back"> Back to previous page</button>
+<?php
+if ($logged_in && $group == 'Librarian') {
+  echo '<a class="btn btn-sm btn-warning" title="Edit this resource from this pathfinder" 
+    href="'.site_url('/resource/update/'.$record->id).'"><i class="glyphicon glyphicon-pencil"></i> Edit Resource Data</a> ';
+}
+?>
+</p>
 <form class="form-horizontal">
   <div class="form-group">
     <label class="col-sm-2 control-label">Title</label>

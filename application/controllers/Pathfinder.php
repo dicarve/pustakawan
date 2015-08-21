@@ -65,6 +65,9 @@ class Pathfinder extends CI_Controller {
   
   public function edit($pathfinder_id)
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $this->data['hidden_type'] = array();
     $this->data['main_title'] = 'Edit Pathfinder';
     $this->data['record'] = $this->Pathfinder_model->getDetail($pathfinder_id);
@@ -78,6 +81,9 @@ class Pathfinder extends CI_Controller {
 
   public function config($op = '')
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     if ($op == 'save') {
       // site name
       $site_name = $this->input->post('site_name');
@@ -139,12 +145,18 @@ class Pathfinder extends CI_Controller {
   
   public function remove_resource($pathfinder_id, $resource_id)
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $this->Pathfinder_model->removeResource($pathfinder_id, $resource_id);
     redirect('/pathfinder/detail/'.$pathfinder_id);
   }
 
   public function delete($pathfinder_id)
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $this->Pathfinder_model->delete($pathfinder_id);
     redirect('/pathfinder/index');
   }
@@ -155,6 +167,9 @@ class Pathfinder extends CI_Controller {
    */
   public function save()
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $save_data = $this->input->post();
     $update_id = $this->input->post('update_ID');
     $hidden_type = $this->input->post('hidden_type');
@@ -186,9 +201,33 @@ class Pathfinder extends CI_Controller {
   
   public function add_resource_form($pathfinder_id)
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $this->data['type'] = $this->input->get('type');
     $this->data['pathfinder_ID'] = $pathfinder_id;
     $this->load->view('pathfinder/add_resource_form', $this->data);
+  }
+  
+  public function set_config($config_type, $pathfinder_id, $other_data = '')
+  {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
+    if ($config_type == 'visibility') {
+      $rt = $this->db->get_where('taxonomy_term', array('tid' => $other_data))->row();
+      $resource_type = $rt->name;
+      $hidden_type = $this->Pathfinder_model->getConfig('pathfinder/'.$pathfinder_id.'.hidden_type');
+      if (isset($hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type'])) {
+        if (!in_array($resource_type, $hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type'])) {
+          $hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type'][] = $resource_type;
+          // var_dump($hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type']);
+          // $hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type'] = $resource_type;
+          $this->Pathfinder_model->setConfig('pathfinder/'.$pathfinder_id.'.hidden_type', $hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type']);
+        }
+      }
+      redirect('/pathfinder/detail/'.$pathfinder_id);
+    }
   }
   
   public function about()

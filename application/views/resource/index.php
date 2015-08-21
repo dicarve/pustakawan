@@ -23,9 +23,29 @@ ob_start();
 ?>
 <div class="panel panel-default">
   <div class="panel-body">
-    <?php echo create_button('anchor', site_url('resource/add'), 'add-resource', 'Add New Resource', 'btn-success', '', $icon = 'plus-sign') ?>
+    <form name="resource_search" id="resource_search" class="form-inline" method="get" action="<?php echo site_url('/resource/index') ?>">
+      <div class="form-group">
+        <input type="text" name="keywords" class="form-control" placeholder="Put one or more keyword(s) here" />
+      </div>
+      <div class="form-group">
+        <?php $type_data = $this->Taxonomy_model->getForSelect('Type', 100, true); ?>
+        <select name="type" class="form-control" >
+          <option value="">ALL RESOURCE TYPE</option>
+          <?php
+            foreach ($type_data as $type) {
+              echo '<option value="'.$type.'">'.$type.'</option>';
+            }
+          ?>
+        </select>
+      </div>
+      <input type="submit" name="save" class="btn btn-primary" value="Search" />
+      <div class="pull-right">
+        <a class="btn btn-success" href="<?php echo site_url('/resource/add') ?>"><i class="glyphicon glyphicon-plus"></i> Add New Resource</a>
+      </div>
+    </form>
   </div>
 </div>
+
 <div class="table-responsive">
   <table class="table table-striped">
     <thead>
@@ -50,7 +70,7 @@ ob_start();
         <td><?php echo $data->authors ?></td><td><?php echo $data->subjects ?></td>
         <td><?php echo $data->publish_year ?></td><td><?php echo $data->publisher ?></td>
         <td><a class="btn btn-warning" href="<?php echo site_url('/resource/update/'.$data->id) ?>">Edit</a></td>
-        <td><a class="btn btn-danger" href="<?php echo site_url('/resource/delete/'.$data->id) ?>">Delete</a></td>
+        <td><a class="btn btn-danger" data-confirm="Are you sure want to delete this resource?" href="<?php echo site_url('/resource/delete/'.$data->id) ?>">Delete</a></td>
       </tr>
       <?php
       $n++;

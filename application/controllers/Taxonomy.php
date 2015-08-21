@@ -38,10 +38,13 @@ class Taxonomy extends CI_Controller {
    */
   public function index($type = 'subject', $page = 1)
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $total_rows = 0;
     $criteria = '';
     if ($keywords = $this->input->get('keywords')) {
-      $criteria = sprintf('name LIKE \'%%%s%\'', $keywords);
+      $criteria = sprintf('name LIKE \'%%%s%%\' AND vocabulary LIKE \'%s\'', $keywords, ucwords($type));
     }
     $this->load->library('pagination');
     
@@ -83,6 +86,9 @@ class Taxonomy extends CI_Controller {
   
   public function ajax($type = 'subject')
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $total_rows = 0;
     $criteria = '';
     $keywords = $this->input->get('keywords');
@@ -106,6 +112,9 @@ class Taxonomy extends CI_Controller {
    */
   public function add($type = 'subject')
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $this->data['type'] = $type;
     $this->data['main_title'] = 'Add Term/Name for '.ucwords($type);
     $this->load->view('taxonomy/add', $this->data);
@@ -113,6 +122,9 @@ class Taxonomy extends CI_Controller {
 
   public function delete($tid)
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $this->db->where('tid', $tid);
     $term_data = $this->db->get('taxonomy_term')->row();
     $this->session->set_flashdata('delete message', sprintf('Term <em>%s</em> removed', $term_data->name));
@@ -122,6 +134,9 @@ class Taxonomy extends CI_Controller {
   
   public function update($tid)
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $this->db->where('tid', $tid);
     $this->data['update_ID'] = $tid;
     $this->data['record'] = $this->db->get('taxonomy_term')->row();
@@ -136,10 +151,17 @@ class Taxonomy extends CI_Controller {
    */
   public function save($type)
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $data['name'] = $this->input->post('name');
+    $data['vocabulary'] = ucwords(strtolower($type));
+    if (empty($data['name'])) {
+      $this->session->set_flashdata('error', 'Term data can\'t be empty');
+      redirect('/taxonomy/add/'.$data['vocabulary']);
+    }
     $data['description'] = $this->input->post('description');
     $data['weight'] = $this->input->post('weight');
-    $data['vocabulary'] = ucwords(strtolower($type));
     $update_ID = $this->input->post('update_ID');
     $this->Taxonomy_model->save($data, $update_ID, sprintf('tid=%d',$update_ID));
     $this->session->set_flashdata('save message', sprintf('Term <em>%s</em> saved', $data['name']));

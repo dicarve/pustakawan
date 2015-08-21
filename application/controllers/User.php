@@ -23,7 +23,7 @@ class User extends CI_Controller {
    */
   public function index($status = '') {
     $this->data['status'] = $status;
-    if ($this->session->userdata('logged_in')) {
+    if ($this->data['logged_in']) {
       redirect('/pathfinder');
     } else {
       $this->data['main_title'] = 'User Login';
@@ -84,8 +84,19 @@ class User extends CI_Controller {
       return false;
     }
   }
-
+  
+  public function add() {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
+    $this->data['main_title'] = 'Add New User';
+    $this->load->view('/user/add', $this->data);
+  }
+  
   public function listusers($page = 1) {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $total_rows = 0;
     $offset = ($this->max_list*$page)-$this->max_list;
     $criteria = '';
@@ -115,42 +126,72 @@ class User extends CI_Controller {
   }
 	
   public function update($user_id = 0) {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
+    $this->data['main_title'] = 'Update User';
     $this->db->where('id', $user_id);
     $this->db->limit(1);
     $query = $this->db->get('users');
     
-    $detail = $query->row_array();
+    $detail = $query->row();
     
-    $this->data['detail_user'] = $detail;
-    $this->load->view('/user/index', $this->data);
+    $this->data['record'] = $detail;
+    $this->load->view('/user/add', $this->data);
+  }
+
+  public function delete($user_id = 0) {
+    // only admin can delete user
+    if (!($this->data['logged_in'] && $this->data['logged_in']['id'] == 1)) {
+      redirect('/user');
+    }
+    if ($user_id == 1) {
+      $this->session->set_flashdata('error', 'Admin user can\'t be deleted');
+      redirect('/user/listusers');      
+    }
+    $this->db->where('id', $user_id);
+    $this->db->limit(1);
+    $this->db->delete('users');
+    $this->session->set_flashdata('info', 'User deleted');
+    redirect('/user/listusers');
   }
   
   public function save($tipe = 'detail') {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $updateID = $this->input->post('updateID');
-    $passwd1 = $this->input->post('passwd1');
+    $passwd1 = $this->input->post('passwd');
     $passwd2 = $this->input->post('passwd2');
     if ($passwd1 !== $passwd2) {
-      redirect('/user/update/password-failed', 'refresh');
+      $this->session->set_flashdata('error', 'Wrong password inserted, please check your data again');
+      if ($updateID) {
+        redirect('/user/update/'.$updateID, 'refresh');  
+      } else {
+        redirect('/user/add', 'refresh');
+      }
+      
       return false;
     }
   	
     $tgl_update = date('Y-m-d H:i:s');
-    $this->db->set('username', $this->input->post('userName'));
-    $this->db->set('realname', $this->input->post('realName'));
-    $this->db->set('groups', $this->input->post('groups'));
-    $this->db->set('updated', $tgl_update);
+    $data['username'] = $this->input->post('username');
+    $data['realname'] = $this->input->post('realname');
+    $data['email'] = $this->input->post('email');
+    $data['groups'] = $this->input->post('groups');
+    $data['updated'] = $tgl_update;
   
     if ($updateID) {
       if ($passwd1 && $passwd2) {
-        $this->db->set('passwd', hash('sha256', $passwd2), false);
+        $data['passwd'] = (string)hash('sha256', $passwd2);
       }
       $this->db->where('id', $updateID);
-      $this->db->update('users');		
+      $this->db->update('users', $data);		
     } else {
       if ($passwd2) {
-        $this->db->set('passwd', hash('sha256', $passwd2), false);
+        $data['passwd'] = (string)hash('sha256', $passwd2);
       }
-      $this->db->insert('users');
+      $this->db->insert('users', $data);
     }
   
     redirect('/user/listusers');

@@ -40,14 +40,17 @@ class Resource extends CI_Controller {
   public function index($page = 1)
   {
     if (!($this->data['logged_in']  && $this->data['group'] == 'Librarian')) {
-      redirect('/user/login');
+      redirect('/user');
     }
     $total_rows = 0;
-    $criteria = '';
+    $criteria = 'id > 0';
     $per_page = 20;
     $this->data['main_title'] = 'Resource Library';
     if ($keywords = $this->input->get('keywords')) {
-      $criteria = sprintf("MATCH(`title`, `series_title`, `subjects`, `authors`, `abstract`) AGAINST('%s' IN BOOLEAN MODE)", $keywords);
+      $criteria .= ' AND '.sprintf("MATCH(`title`, `series_title`, `subjects`, `authors`, `abstract`) AGAINST('%s' IN BOOLEAN MODE)", $keywords);
+    }
+    if ($type = $this->input->get('type')) {
+      $criteria .= sprintf(' AND type=\'%s\'', $type);
     }
     $this->load->library('pagination');
     
@@ -88,6 +91,9 @@ class Resource extends CI_Controller {
   
   public function ajax()
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $total_rows = 0;
     $criteria = '';
     $type = $this->input->get('type');
@@ -129,6 +135,9 @@ class Resource extends CI_Controller {
 
   public function update($resource_id = 0)
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $this->data['record'] = $this->Resource_model->getDetail($resource_id);
     $this->data['main_title'] = $this->data['record']->title;
     $this->data['update_ID'] = $this->data['record']->id;
@@ -142,8 +151,20 @@ class Resource extends CI_Controller {
     $this->load->view('resource/detail', $this->data);
   }
   
+  public function delete($resource_id = 0)
+  {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
+    $this->Resource_model->delete($resource_id);
+    redirect('/resource/index');
+  }
+  
   public function save()
   {
+    if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
+      redirect('/user');
+    }
     $save_data = $this->input->post();
     $pathfinder_id = $this->input->post('pathfinder_ID');
     $update_id = $this->input->post('update_ID');
@@ -153,14 +174,19 @@ class Resource extends CI_Controller {
     unset($save_data['update_ID']);
 
     // change the subject data array
-    $temp = $save_data['subjects'];
-    $save_data['subjects'] = implode(' ; ', $temp);
-    $save_data['subjects_array'] = serialize($temp);
+    if (isset($save_data['subjects'])) {
+      $temp = $save_data['subjects'];
+      $save_data['subjects'] = implode(' ; ', $temp);
+      $save_data['subjects_array'] = serialize($temp);	
+    }
 
     // change the authors data array
-    $temp = $save_data['authors'];
-    $save_data['authors'] = implode(' ; ', $temp);
-    $save_data['authors_array'] = serialize($temp);
+    if (isset($save_data['authors'])) {
+      $temp = $save_data['authors'];
+      $save_data['authors'] = implode(' ; ', $temp);
+      $save_data['authors_array'] = serialize($temp);	
+    }
+
     
     $date = new DateTime();
     $save_data['created'] = serialize($temp);

@@ -30,6 +30,11 @@ if ($save_message) {
 if (!$pathfinder_records) {
   echo '<div class="alert alert-warning">';
   echo 'Sorry, no pathfinder found/available yet';
+  if ($logged_in && $group == 'Librarian') {
+    echo '<p>';
+    echo create_button('anchor', site_url('pathfinder/add'), 'add-pathfinder', 'Add New Pathfinder', 'btn-success', '', $icon = 'plus-sign');
+    echo '</p>';
+  }
   echo '</div>'."\n";	
 } else {
 

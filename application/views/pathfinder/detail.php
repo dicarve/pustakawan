@@ -28,7 +28,9 @@ ob_start();
     <div class="col-md-2 bg-primary info">Target users</div><div class="col-md-2"><?php echo $pathfinder->target_users ?></div>
     <div class="col-md-2 bg-primary info">Subject</div><div class="col-md-2"><?php echo $pathfinder->subjects ?></div>
   </div>
+  <?php if ($logged_in && $group == 'Librarian') : ?>
   <p><a href="<?php echo site_url('/pathfinder/edit/'.$pathfinder->id) ?>" class="btn btn-info"><i class="glyphicon glyphicon-pencil"></i> Edit this pathfinder</a></p>
+  <?php endif; ?>
 </div>
 
 <h3>Resources</h3>
@@ -36,6 +38,7 @@ ob_start();
 $normalized_names = array();
 $hidden_type_str = '';
 if (isset($hidden_type) && $hidden_type) {
+  // var_dump($hidden_type);
   foreach($hidden_type as $tp) {
     $hidden_type_str .= "'$tp',";
   }
@@ -77,7 +80,7 @@ foreach ($types as $type) {
         </ul>
       </div>
       
-      <a href="<?php echo site_url('/pathfinder/setconfig/visibility/'.$type->tid) ?>" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-eye-open"></i> Toogle Visibility</a>
+      <a href="<?php echo site_url('/pathfinder/set_config/visibility/'.$pathfinder->id.'/'.$type->tid) ?>" class="btn btn-sm btn-warning" data-confirm="Are you sure want to hide this resource type?"><i class="glyphicon glyphicon-eye-open"></i> Toogle Visibility</a>
     </p>
     <?php endif; ?>
     <?php
@@ -91,8 +94,10 @@ foreach ($types as $type) {
         echo '<a class="btn btn-sm btn-info resource-detail-btn" title="View Detail"
           href="'.site_url('/resource/detail/'.$doc->id).'"><i class="glyphicon glyphicon-book"></i> Detail</a> ';
         if ($logged_in && $group == 'Librarian') {
-        echo '<a class="btn btn-sm btn-danger" title="Remove this resource from this pathfinder" data-confirm="Are you sure want to remove this resource from this pathfinder?"
-          href="'.site_url('/pathfinder/remove_resource/'.$pathfinder->id.'/'.$doc->id).'"><i class="glyphicon glyphicon-trash"></i></a>';
+          echo '<a class="btn btn-sm btn-warning" title="Edit this resource from this pathfinder" 
+            href="'.site_url('/resource/update/'.$doc->id).'"><i class="glyphicon glyphicon-pencil"></i> Edit Resource Data</a> ';
+          echo '<a class="btn btn-sm btn-danger" title="Remove this resource from this pathfinder" data-confirm="Are you sure want to remove this resource from this pathfinder?"
+            href="'.site_url('/pathfinder/remove_resource/'.$pathfinder->id.'/'.$doc->id).'"><i class="glyphicon glyphicon-trash"></i></a>';
         }
         echo '</span>';
         echo '</p>';

@@ -20,6 +20,12 @@
  */
 
 ob_start();
+$error = $this->session->flashdata('error');
+if ($error) {
+  echo '<div class="alert alert-warning">';
+  echo $error;
+  echo '</div>'."\n";
+}
 ?>
 <form role="form" method="post" name="pathfinder-form" id="pathfinder-form" action="<?php echo site_url('/taxonomy/save/'.$type) ?>">
 <?php echo create_bootstrap_input('text', 'name', array(), 'Term Name', '', '', isset($record->name)?$record->name:'', '', 'Name of term', true) ?>

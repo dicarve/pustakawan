@@ -18,7 +18,7 @@ $n = 1;
 ?>
 <div class="panel panel-default">
   <div class="panel-body">
-    <form name="taxonomy_search" id="taxonomy_search" class="form-inline" method="get" action="<?php echo site_url('/taxonomy/save/'.$type) ?>">
+    <form name="taxonomy_search" id="taxonomy_search" class="form-inline" method="get" action="<?php echo site_url('/taxonomy/index/'.$type) ?>">
       <div class="form-group">
         <input type="text" name="keywords" class="form-control" placeholder="Put one or more keyword(s) here" />
       </div>
@@ -40,6 +40,7 @@ $n = 1;
       <a href="<?php echo site_url('/taxonomy/index/author') ?>" class="list-group-item"><i class="glyphicon glyphicon-user"></i> Authors</a>
       <a href="<?php echo site_url('/taxonomy/index/format') ?>" class="list-group-item"><i class="glyphicon glyphicon-floppy-disk"></i> Resource Format</a>
       <a href="<?php echo site_url('/taxonomy/index/location') ?>" class="list-group-item"><i class="glyphicon glyphicon-map-marker"></i> Resource Location</a>
+      <a href="<?php echo site_url('/taxonomy/index/publisher') ?>" class="list-group-item"><i class="glyphicon glyphicon-map-marker"></i> Publisher</a>
     </div>
   </div>
   <div class="col-md-9">
