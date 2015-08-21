@@ -12,10 +12,11 @@ var regChosen2 = function(el) {
     
         $.each(data, function (i, val) {
           $.each(data, function (i, val) {
-            results.push({ value: val.text, text: val.text });
+            results.push({ value: val.value, text: val.text });
           });
         });
-    
+        
+        
         return results;
     });
     
@@ -69,6 +70,20 @@ $(document).ready(function() {
     
   });
   
-  // add-resource-btn
+  
+  $('.btn-back').bind('click', function() {
+    self.history.back();
+  });
+
+  $('[data-confirm]').bind('click', function(e) {
+    e.preventDefault();
+    var btn = $(this);
+    var url = btn.attr('href');
+    var msg = btn.attr('data-confirm');
+    var conf = confirm(msg);
+    if (conf) {
+      self.location.href = url;
+    }
+  });
   
 })

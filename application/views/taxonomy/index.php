@@ -7,6 +7,13 @@ if ($save_message) {
   echo '</div>'."\n";
 }
 
+$delete_message = $this->session->flashdata('delete message');
+if ($delete_message) {
+  echo '<div class="alert alert-warning">';
+  echo $delete_message;
+  echo '</div>'."\n";
+}
+
 $n = 1;
 ?>
 <div class="panel panel-default">
@@ -52,7 +59,7 @@ $n = 1;
       <tr>
         <td><?php echo $n ?></td><td><?php echo $data->name ?></td>
         <td><a class="btn btn-warning" href="<?php echo site_url('/taxonomy/update/'.$data->tid) ?>">Edit</a></td>
-        <td><a class="btn btn-danger" href="<?php echo site_url('/taxonomy/delete/'.$data->tid) ?>">Delete</a></td>
+        <td><a class="btn btn-danger" href="<?php echo site_url('/taxonomy/delete/'.$data->tid) ?>" data-confirm="Are you sure want to delete this term?">Delete</a></td>
       </tr>
       <?php
       $n++;

@@ -135,6 +135,13 @@ class Resource extends CI_Controller {
     $this->load->view('resource/add', $this->data);
   }
   
+  public function detail($resource_id = 0)
+  {
+    $this->data['record'] = $this->Resource_model->getDetail($resource_id);
+    $this->data['main_title'] = $this->data['record']->title;
+    $this->load->view('resource/detail', $this->data);
+  }
+  
   public function save()
   {
     $save_data = $this->input->post();

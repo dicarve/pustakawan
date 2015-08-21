@@ -42,6 +42,14 @@ ob_start();
   }
   echo create_bootstrap_input('select', 'subjects[]', $subject_options, 'Subject(s)', 'chosen-ajax', '', isset($record->subjects_array)?unserialize($record->subjects_array):'', 'multiple="multiple" data-ajax-source="'.site_url('/taxonomy/ajax/subject').'"', 'Give one or more subject/topic terms of this pathfinder')
 ?>
+<?php
+  $types = $this->Taxonomy_model->getForSelect('type', 100);
+  $type_options = array();
+  foreach ($types as $type) {
+    $type_options[$type] = $type;
+  }
+  echo create_bootstrap_input('select', 'hidden_type[]', $type_options, 'Hidden Resource Type', 'chosen', '', $hidden_type, 'multiple="multiple"', 'Choose category for this pathfinder', true)
+?>
 <?php echo create_bootstrap_input('file', 'image_filename', array(), 'Image', '', '', '', '', 'Optional image representing this pathfinder') ?>
 <?php
   if (isset($update_ID)) {

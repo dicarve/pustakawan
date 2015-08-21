@@ -28,12 +28,24 @@ ob_start();
     <div class="col-md-2 bg-primary info">Target users</div><div class="col-md-2"><?php echo $pathfinder->target_users ?></div>
     <div class="col-md-2 bg-primary info">Subject</div><div class="col-md-2"><?php echo $pathfinder->subjects ?></div>
   </div>
+  <p><a href="<?php echo site_url('/pathfinder/edit/'.$pathfinder->id) ?>" class="btn btn-info"><i class="glyphicon glyphicon-pencil"></i> Edit this pathfinder</a></p>
 </div>
 
 <h3>Resources</h3>
 <?php
 $normalized_names = array();
-$types = $this->Taxonomy_model->getData('Type', 1, 30);
+$hidden_type_str = '';
+if (isset($hidden_type) && $hidden_type) {
+  foreach($hidden_type as $tp) {
+    $hidden_type_str .= "'$tp',";
+  }
+  // remove last comma
+  $hidden_type_str = substr_replace($hidden_type_str, '', -1);
+  $types = $this->Taxonomy_model->getData('Type', 1, 30, "name NOT IN ($hidden_type_str)");  
+} else {
+  $types = $this->Taxonomy_model->getData('Type', 1, 30);  
+}
+
 ?>
 
 <div class="row">
@@ -51,17 +63,17 @@ foreach ($types as $type) {
     <h3 class="panel-title"><?php echo $type->name ?></h3>
   </div>
   <div class="panel-body">
-    <?php if ($logged_in) : ?>
+    <?php if ($logged_in && $group == 'Librarian') : ?>
     <p>
       <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
           Resource <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li><a href="<?php echo site_url('/resource/add/'.$pathfinder->id.'/'.$type->tid) ?>">Add from New Resource</a></li>
           <li><a class="add-resource-btn"
             data-title="Add Resource (<?php echo $type->name ?>)"
             href="<?php echo site_url('/pathfinder/add_resource_form/'.$pathfinder->id) ?>?type=<?php echo urlencode($type->name) ?>">Add from Existing Resource</a></li>
+          <li><a href="<?php echo site_url('/resource/add/'.$pathfinder->id.'/'.$type->tid) ?>">Add from New Resource</a></li>
         </ul>
       </div>
       
@@ -75,8 +87,14 @@ foreach ($types as $type) {
         echo '<span class="doc-field doc-title">'.$doc->title.'</span>';
         echo '<span class="doc-field doc-author">Author(s): '.$doc->authors.'</span>';
         echo '<span class="doc-field doc-year">Publish year: '.$doc->publish_year.'</span>';
-        echo '<span class="doc-field doc-buttons"><a class="btn btn-sm btn-danger" title="Remove this resource from this pathfinder"
-          href="'.site_url('/pathfinder/remove_resource/'.$pathfinder->id.'/'.$doc->id).'"><i class="glyphicon glyphicon-trash"></i></a></span>';
+        echo '<span class="doc-field doc-buttons">';
+        echo '<a class="btn btn-sm btn-info resource-detail-btn" title="View Detail"
+          href="'.site_url('/resource/detail/'.$doc->id).'"><i class="glyphicon glyphicon-book"></i> Detail</a> ';
+        if ($logged_in && $group == 'Librarian') {
+        echo '<a class="btn btn-sm btn-danger" title="Remove this resource from this pathfinder" data-confirm="Are you sure want to remove this resource from this pathfinder?"
+          href="'.site_url('/pathfinder/remove_resource/'.$pathfinder->id.'/'.$doc->id).'"><i class="glyphicon glyphicon-trash"></i></a>';
+        }
+        echo '</span>';
         echo '</p>';
       }
     } else {

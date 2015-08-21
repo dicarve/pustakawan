@@ -58,15 +58,21 @@ class Pathfinder extends CI_Controller {
    */
   public function add()
   {
+    $this->data['hidden_type'] = array();
     $this->data['main_title'] = 'Add New Pathfinder';
     $this->load->view('pathfinder/add', $this->data);
   }
   
   public function edit($pathfinder_id)
   {
+    $this->data['hidden_type'] = array();
     $this->data['main_title'] = 'Edit Pathfinder';
     $this->data['record'] = $this->Pathfinder_model->getDetail($pathfinder_id);
     $this->data['update_ID'] = $pathfinder_id;
+    $hidden_type = $this->Pathfinder_model->getConfig('pathfinder/'.$pathfinder_id.'.hidden_type');
+    if (isset($hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type'])) {
+      $this->data['hidden_type'] = $hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type'];  
+    }
     $this->load->view('pathfinder/add', $this->data);
   }
 
@@ -98,8 +104,8 @@ class Pathfinder extends CI_Controller {
       $this->data['content'] = 'No information provided yet';
       $this->data['main_title'] = 'Information';
     } else {
-      $this->data['content'] = $content_data['content'];
-      $this->data['main_title'] = $content_data['title'];      
+      $this->data['content'] = $content_data['content.'.$content_id]['content'];
+      $this->data['main_title'] = $content_data['content.'.$content_id]['title'];      
     }
 
     $this->load->view('pathfinder/content', $this->data);
@@ -109,6 +115,10 @@ class Pathfinder extends CI_Controller {
   {
     $this->data['pathfinder'] = $this->Pathfinder_model->getDetail($pathfinder_id);
     $this->data['main_title'] = $this->data['pathfinder']->title;
+    $hidden_type = $this->Pathfinder_model->getConfig('pathfinder/'.$pathfinder_id.'.hidden_type');
+    if (isset($hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type'])) {
+      $this->data['hidden_type'] = $hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type'];  
+    }
     $this->load->view('pathfinder/detail', $this->data);
   }
   
@@ -147,9 +157,11 @@ class Pathfinder extends CI_Controller {
   {
     $save_data = $this->input->post();
     $update_id = $this->input->post('update_ID');
+    $hidden_type = $this->input->post('hidden_type');
     // remove non fields element
     unset($save_data['save']);
     unset($save_data['update_ID']);
+    unset($save_data['hidden_type']);
 
     // change the subject data array
     $temp = $save_data['subjects'];
@@ -161,7 +173,11 @@ class Pathfinder extends CI_Controller {
     if ($update_id) {
       $this->Pathfinder_model->save($save_data, true, sprintf("id=%d", $update_id));
     } else {
-      $this->Pathfinder_model->save($save_data);  
+      $update_id = $this->Pathfinder_model->save($save_data);  
+    }
+    
+    if ($hidden_type) {
+      $this->Pathfinder_model->setConfig('pathfinder/'.$update_id.'.hidden_type', $hidden_type);
     }
     
     $this->session->set_flashdata('save message', 'Pathfinder data successfully saved');

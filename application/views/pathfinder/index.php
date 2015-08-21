@@ -53,6 +53,7 @@ foreach ($pathfinder_records as $pf) :
       <a href="<?php echo site_url('/pathfinder/detail/'.$pf->id) ?>" class="btn btn-info"><i class="glyphicon glyphicon-search"></i> Detail</a>
       <?php if ($logged_in && $group == 'Librarian') : ?>
       <a href="<?php echo site_url('/pathfinder/edit/'.$pf->id) ?>" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+      <a href="<?php echo site_url('/pathfinder/delete/'.$pf->id) ?>" class="btn btn-danger" data-confirm="Are you sure want to remove this Pathfinder?"><i class="glyphicon glyphicon-trash"></i> Delete</a>
       <?php endif; ?>
     </p>
   </div>

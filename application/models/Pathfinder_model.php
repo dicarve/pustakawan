@@ -64,22 +64,22 @@ class Pathfinder_model extends CI_Model {
       return $query->row();        
     }
     
-    public function getConfig($config_name, $unserialized = true)
+    public function getConfig($config_name, $unserialized = true, $return_one = false)
     {
       $config = array();
       $this->db->where('config_name', $config_name);
       $result = $this->db->get('config')->result();
-      foreach ($result as $config) {
-        $config[$config->config_name] = $unserialized?unserialize($config->config_val):$config->config_val;
+      foreach ($result as $config_data) {
+        $config[$config_data->config_name] = $unserialized?unserialize($config_data->config_val):$config_data->config_val;
       }
       return $config;
     }
     
-    public function setConfig($config_name, $data)
+    public function setConfig($config_name, $config_value)
     {
       $data['config_name'] = $config_name;
-      $data['config_val'] = serialize($data);
-      $this->db->replace(config, $data);
+      $data['config_val'] = serialize($config_value);
+      $this->db->replace('config', $data);
     }
     
     public function getResources($pathfinder_id, $limit = 100)
@@ -102,6 +102,7 @@ class Pathfinder_model extends CI_Model {
         $this->db->update('pathfinder', $data);
       } else {
         $this->db->insert('pathfinder', $data);
+        return $this->db->insert_id();
       }
     }
 

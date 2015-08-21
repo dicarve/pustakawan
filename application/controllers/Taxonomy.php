@@ -111,6 +111,15 @@ class Taxonomy extends CI_Controller {
     $this->load->view('taxonomy/add', $this->data);
   }
 
+  public function delete($tid)
+  {
+    $this->db->where('tid', $tid);
+    $term_data = $this->db->get('taxonomy_term')->row();
+    $this->session->set_flashdata('delete message', sprintf('Term <em>%s</em> removed', $term_data->name));
+    $this->Taxonomy_model->delete($tid);
+    redirect('/taxonomy/index');
+  }
+  
   public function update($tid)
   {
     $this->db->where('tid', $tid);

@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<?php
+$site_name_data = $this->Pathfinder_model->getConfig('site_name');
+$homepage_data = $this->Pathfinder_model->getConfig('content.homepage');
+?>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -29,7 +33,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<?php echo site_url() ?>">PUSTAKAWAN: Online Pathfinder</a>
+          <a class="navbar-brand" href="<?php echo site_url() ?>"><?php echo $site_name_data['site_name']?$site_name_data['site_name']:'PUSTAKAWAN: Online Pathfinder' ?></a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -69,6 +73,13 @@
         <?php endif; ?>
         
         <div class="<?php echo (isset($sidebar) && $sidebar)?'col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2':'col-md-12' ?> main">
+        <?php
+        $is_segment = $this->uri->segment(1);
+        $full_uri = $this->uri->uri_string();
+        // var_dump($full_uri);
+        if (isset($homepage_data['content.homepage']['content']) && ($is_segment == null && $full_uri == '')) { ?>
+        <div class="jumbotron homepage-info"><p class="lead"><?php echo $homepage_data['content.homepage']['content'] ?></p></div>
+        <?php } ?>
         <h1 class="page-header"><?php echo $main_title ?></h1>
         <?php echo $main_content ?>
         </div>
