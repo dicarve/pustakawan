@@ -82,15 +82,6 @@ class Pathfinder_model extends CI_Model {
       $this->db->replace('config', $data);
     }
     
-    public function getResources($pathfinder_id, $limit = 100)
-    {
-      $this->db->select('resource_id, resources.title, resources.schema_id');
-      $this->db->where(array('pathfinder_id' => $pathfinder_id));
-      $this->db->join('resources', 'pathfinder_resources.resource_id=resources.id');
-      $resources_result = $this->db->get('pathfinder_resources', $limit);
-      return $resources_result->result();
-    }
-    
     public function save($data, $is_update = false, $criteria = null)
     {
       if ($is_update) {
@@ -112,7 +103,10 @@ class Pathfinder_model extends CI_Model {
       $this->db->delete('pathfinder');
       // remove all resource relation
       $this->db->where('pid', $pathfinder_id);
-      $this->db->delete('pathfinder_resources');      
+      $this->db->delete('pathfinder_resources');
+      // delete all config related to this pathfinder
+      $this->db->like('config_name', 'pathfinder/'.$pathfinder_id, 'after');
+      $this->db->delete('config');
     }
     
     public function addResource($pathfinder_id, $resource_id)

@@ -27,6 +27,13 @@ if ($save_message) {
   echo '</div>'."\n";
 }
 
+$error = $this->session->flashdata('error');
+if ($error) {
+  echo '<div class="alert alert-danger">';
+  echo $error;
+  echo '</div>'."\n";
+}
+
 if (!$pathfinder_records) {
   echo '<div class="alert alert-warning">';
   echo 'Sorry, no pathfinder found/available yet';
@@ -52,8 +59,14 @@ foreach ($pathfinder_records as $pf) :
 <div class="panel panel-default pathfinder-panel">
   <div class="panel-heading"><h3 class="panel-title"><?php echo $pf->title ?></h3></div>
   <div class="panel-body">
-    <p class="lead pathfinder-description"><?php echo $pf->description ?></p></p>
+    <?php
+    if ($pf->image_filename) {
+      echo '<div class="pathfinder-image"><a href="'.site_url('/pathfinder/detail/'.$pf->id).'"><img src="'.base_url('files/pathfinder/images').'/'.$pf->image_filename.'" class="img-responsive img-thumbnail" /></a></div>';  
+    }
+    ?>
+    <p class="lead pathfinder-description"><?php echo $pf->description ?></p>
     <p class="pathfinder-category">Category: <?php echo $pf->category ?></p>
+    <p class="pathfinder-subjects">Subjects: <?php echo $pf->subjects ?></p>
     <p class="pathfinder-actions">
       <a href="<?php echo site_url('/pathfinder/detail/'.$pf->id) ?>" class="btn btn-info"><i class="glyphicon glyphicon-search"></i> Detail</a>
       <?php if ($logged_in && $group == 'Librarian') : ?>

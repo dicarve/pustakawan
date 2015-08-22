@@ -81,6 +81,8 @@ class Taxonomy extends CI_Controller {
     
     $this->pagination->initialize($config);
     $this->data['pagination'] = $this->pagination->create_links();
+    $this->data['page'] = $page;
+    $this->data['per_page'] = $config['per_page'];
     $this->load->view('taxonomy/index', $this->data);
   }
   

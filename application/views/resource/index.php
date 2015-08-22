@@ -41,6 +41,18 @@ ob_start();
       <input type="submit" name="save" class="btn btn-primary" value="Search" />
       <div class="pull-right">
         <a class="btn btn-success" href="<?php echo site_url('/resource/add') ?>"><i class="glyphicon glyphicon-plus"></i> Add New Resource</a>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            Import Resource <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">From Bibtex (.bib) file</a></li>
+            <li><a href="#">From URL</a></li>
+            <li><a href="#">From Z39.50 SRU</a></li>
+            <li><a href="#">From CSV file</a></li>
+            <li><a href="#">From SLiMS</a></li>
+          </ul>
+        </div>
       </div>
     </form>
   </div>

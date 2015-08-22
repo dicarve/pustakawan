@@ -183,6 +183,21 @@ class Pathfinder extends CI_Controller {
     $save_data['subjects'] = implode(' ; ', $temp);
     $save_data['subjects_array'] = serialize($temp);
     
+    // upload file if exists
+    if ($_FILES['image_filename']['size'] > 0) {
+      $config['upload_path']          = './files/pathfinder/images';
+      $config['allowed_types']        = 'gif|jpg|png';
+      $config['max_size']             = 100;
+      
+      $this->load->library('upload', $config);
+      
+      if (!$this->upload->do_upload('image_filename')) {
+        $error = 'File failed to upload, probably because of size too big or wrong file type';
+      } else {
+        $save_data['image_filename'] = $this->upload->data('file_name');
+      }
+    }
+    
     // set the name of Pathfinder creator
     $save_data['authors'] = $this->data['logged_in']['realname'];
     if ($update_id) {
@@ -195,6 +210,9 @@ class Pathfinder extends CI_Controller {
       $this->Pathfinder_model->setConfig('pathfinder/'.$update_id.'.hidden_type', $hidden_type);
     }
     
+    if ($error) {
+      $this->session->set_flashdata('error', $error);  
+    }
     $this->session->set_flashdata('save message', 'Pathfinder data successfully saved');
     redirect('/pathfinder/index');
   }
@@ -225,6 +243,9 @@ class Pathfinder extends CI_Controller {
           // $hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type'] = $resource_type;
           $this->Pathfinder_model->setConfig('pathfinder/'.$pathfinder_id.'.hidden_type', $hidden_type['pathfinder/'.$pathfinder_id.'.hidden_type']);
         }
+      } else {
+        $hidden_type = array($resource_type);
+        $this->Pathfinder_model->setConfig('pathfinder/'.$pathfinder_id.'.hidden_type', $hidden_type);
       }
       redirect('/pathfinder/detail/'.$pathfinder_id);
     }

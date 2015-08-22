@@ -186,7 +186,21 @@ class Resource extends CI_Controller {
       $save_data['authors'] = implode(' ; ', $temp);
       $save_data['authors_array'] = serialize($temp);	
     }
-
+    
+    // upload file
+    if ($_FILES['filename']['size'] > 0) {
+      $config['upload_path']          = './files/repository';
+      $config['allowed_types']        = 'mp3|ogg|mp4|aac|ogv|wav|pdf|rtf|txt|odt|odp|doc|docx|ppt|pptx|gif|jpg|png|tif|zip|7z|rar';
+      $config['max_size']             = 0;
+      
+      $this->load->library('upload', $config);
+      
+      if (!$this->upload->do_upload('filename')) {
+        $error = 'File failed to upload, probably because of size too big or wrong file type';
+      } else {
+        $save_data['filename'] = $this->upload->data('file_name');
+      } 
+    }
     
     $date = new DateTime();
     $save_data['created'] = serialize($temp);

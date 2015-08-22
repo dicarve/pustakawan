@@ -22,7 +22,7 @@ $homepage_data = $this->Pathfinder_model->getConfig('content.homepage');
     <link href="<?php echo base_url('assets/themes/default') ?>/css/app.css" rel="stylesheet">
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#sidebar-nav">
 
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container-fluid">

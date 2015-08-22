@@ -21,7 +21,7 @@
 
 ob_start();
 ?>
-<form role="form" method="post" name="pathfinder-form" id="pathfinder-form" action="<?php echo site_url('/pathfinder/save') ?>">
+<form role="form" method="post" name="pathfinder-form" id="pathfinder-form" enctype="multipart/form-data" action="<?php echo site_url('/pathfinder/save') ?>">
 <?php echo create_bootstrap_input('text', 'title', array(), 'Title', '', '', isset($record->title)?$record->title:'', '', 'Give unique name such as: "Pathfinder for library researchers"', true) ?>
 <?php echo create_bootstrap_input('textarea', 'description', array(), 'Description', '', '', isset($record->description)?$record->description:'', '', 'Describe in one or two paragraph explaining this pathfinder', true) ?>
 <?php
@@ -35,10 +35,12 @@ ob_start();
 <?php echo create_bootstrap_input('text', 'scope', array(), 'Scope', '', '', isset($record->scope)?$record->scope:'', '', 'Scope of this pathfinder') ?>
 <?php echo create_bootstrap_input('text', 'target_users', array(), 'Target users', '', '', isset($record->target_users)?$record->target_users:'', '', 'Intended user type for this pathfinder') ?>
 <?php
-  $subjects = $this->Taxonomy_model->getForSelect('subject', 100);
   $subject_options = array();
-  foreach ($subjects as $subject) {
-    $subject_options[$subject] = $subject;
+  if (isset($record->subjects_array) && $record->subjects_array) {
+    $subjects = unserialize($record->subjects_array);
+    foreach ($subjects as $subject) {
+       $subject_options[$subject] = $subject;
+    }
   }
   echo create_bootstrap_input('select', 'subjects[]', $subject_options, 'Subject(s)', 'chosen-ajax', '', isset($record->subjects_array)?unserialize($record->subjects_array):'', 'multiple="multiple" data-ajax-source="'.site_url('/taxonomy/ajax/subject').'"', 'Give one or more subject/topic terms of this pathfinder')
 ?>

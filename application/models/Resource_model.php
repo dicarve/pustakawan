@@ -34,7 +34,7 @@ class Resource_model extends CI_Model {
         $offset = ($page*$limit)-$limit;
       }
       // real query
-      $this->db->select('id, title, authors, subjects, publish_year, publisher');
+      $this->db->select('id, title, authors, subjects, publish_year, publisher, url, location');
       if ($criteria) {
         $this->db->where($criteria, null, false);  
       }
@@ -84,9 +84,14 @@ class Resource_model extends CI_Model {
       }
     }
     
-    public function delete($pathfinder_id)
+    public function delete($resource_id)
     {
-      $this->db->where(array('id' => $pathfinder_id));
+      $record = $this->getDetail($resource_id);
+      $this->db->where(array('id' => $resource_id));
       $this->db->delete('resource');
+      // remove file
+      if ($record->filename) {
+        @unlink('./files/repository/'.$record->filename);
+      }
     }
 }

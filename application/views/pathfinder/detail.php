@@ -53,14 +53,14 @@ if (isset($hidden_type) && $hidden_type) {
 
 <div class="row">
   
-<div class="col-md-12">
+<div class="col-md-12 pathfinder-resources-list">
 <?php
 foreach ($types as $type) {
   $normalized_names[$type->name] = strtolower(str_ireplace(array(' ', '/', '\\', '-', '@'), '_', $type->name));
   $total_rows = 0;
   $resources = $this->Resource_model->getData(1, 20, sprintf("type='%s'", $type->name), $total_rows, $pathfinder->id);
 ?>
-<a name="<?php echo $normalized_names[$type->name]; ?>"></a>
+<a name="<?php echo $normalized_names[$type->name]; ?>" id="<?php echo $normalized_names[$type->name]; ?>"></a>
 <div class="panel panel-primary resource-type">
   <div class="panel-heading">
     <h3 class="panel-title"><?php echo $type->name ?></h3>
@@ -80,16 +80,22 @@ foreach ($types as $type) {
         </ul>
       </div>
       
-      <a href="<?php echo site_url('/pathfinder/set_config/visibility/'.$pathfinder->id.'/'.$type->tid) ?>" class="btn btn-sm btn-warning" data-confirm="Are you sure want to hide this resource type?"><i class="glyphicon glyphicon-eye-open"></i> Toogle Visibility</a>
+      <a href="<?php echo site_url('/pathfinder/set_config/visibility/'.$pathfinder->id.'/'.$type->tid) ?>" class="btn btn-sm btn-warning" data-confirm="Are you sure want to hide this resource type?"><i class="glyphicon glyphicon-eye-close"></i> Hide this type</a>
     </p>
     <?php endif; ?>
     <?php
     if ($total_rows) {
       foreach ($resources as $doc) {
         echo '<p class="doc">';
-        echo '<span class="doc-field doc-title">'.$doc->title.'</span>';
-        echo '<span class="doc-field doc-author">Author(s): '.$doc->authors.'</span>';
-        echo '<span class="doc-field doc-year">Publish year: '.$doc->publish_year.'</span>';
+        echo '<span class="doc-field doc-title"><a href="'.site_url('/resource/detail/'.$doc->id).'">'.$doc->title.'</a></span>';
+        echo '<span class="doc-field doc-author pad-left10">Author(s): '.$doc->authors.'</span>';
+        echo '<span class="doc-field doc-year pad-left10">Publish year: '.$doc->publish_year.'</span>';
+        if ($doc->location) {
+          echo '<span class="doc-field doc-url pad-left10">Resource location: '.$doc->location.'</span>';  
+        }
+        if ($doc->url) {
+          echo '<span class="doc-field doc-url pad-left10">URL: <a href="'.$doc->url.'" target="_blank">'.$doc->url.'</a></span>';  
+        }
         echo '<span class="doc-field doc-buttons">';
         echo '<a class="btn btn-sm btn-info resource-detail-btn" title="View Detail"
           href="'.site_url('/resource/detail/'.$doc->id).'"><i class="glyphicon glyphicon-book"></i> Detail</a> ';
@@ -118,9 +124,13 @@ foreach ($types as $type) {
 
 <?php
 ob_start();
+if ($pathfinder->image_filename) {
+  echo '<div class="pathfinder-image-detail"><img src="'.base_url('files/pathfinder/images').'/'.$pathfinder->image_filename.'" class="img-responsive img-thumbnail" /></div>';  
+}
 ?>
 <h3>Resource Type</h3>
-<ul class="resource-type-links">
+<nav id="sidebar-nav">
+<ul class="nav nav-pills nav-stacked resource-type-links">
 <?php
 foreach ($types as $type) {
 ?>
@@ -129,6 +139,7 @@ foreach ($types as $type) {
 }
 ?>
 </ul>
+</nav>
 <?php
 $sidebar = ob_get_clean();
 ?>

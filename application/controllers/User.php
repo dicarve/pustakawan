@@ -62,7 +62,8 @@ class User extends CI_Controller {
       redirect('/pathfinder', 'refresh');
       return true;
     } else {
-      redirect('/user/login/failed', 'refresh');
+      $this->session->set_flashdata('error', 'Wrong username or password inserted, make sure you use right lowercase/uppercase combination');
+      redirect('/user', 'refresh');
       return false;
     }
   }
@@ -98,10 +99,18 @@ class User extends CI_Controller {
       redirect('/user');
     }
     $total_rows = 0;
-    $offset = ($this->max_list*$page)-$this->max_list;
+    $offset = 0;
+    if ($page > 1) {
+      $offset = ($this->max_list*$page)-$this->max_list;  
+    }
+    
     $criteria = '';
     $this->data['main_title'] = 'Users Management';
     
+    if ($keywords = $this->input->get('keywords')) {
+      $this->db->where(sprintf('realname LIKE \'%%%s%%\' OR username LIKE \'%%%s%%\'', $keywords, $keywords), null, false);
+    }
+
     $this->db->limit($this->max_list, $offset);
     $query = $this->db->get('users');
     $total_rows = $query->num_rows();
@@ -137,6 +146,7 @@ class User extends CI_Controller {
     $detail = $query->row();
     
     $this->data['record'] = $detail;
+    $this->data['update_ID'] = $user_id;
     $this->load->view('/user/add', $this->data);
   }
 
@@ -160,7 +170,7 @@ class User extends CI_Controller {
     if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
       redirect('/user');
     }
-    $updateID = $this->input->post('updateID');
+    $updateID = $this->input->post('update_ID');
     $passwd1 = $this->input->post('passwd');
     $passwd2 = $this->input->post('passwd2');
     if ($passwd1 !== $passwd2) {
@@ -186,12 +196,14 @@ class User extends CI_Controller {
         $data['passwd'] = (string)hash('sha256', $passwd2);
       }
       $this->db->where('id', $updateID);
-      $this->db->update('users', $data);		
+      $this->db->update('users', $data);
+      $this->session->set_flashdata('info', 'User '.$data['realname'].' data updated');
     } else {
       if ($passwd2) {
         $data['passwd'] = (string)hash('sha256', $passwd2);
       }
       $this->db->insert('users', $data);
+      $this->session->set_flashdata('info', 'New user added');
     }
   
     redirect('/user/listusers');

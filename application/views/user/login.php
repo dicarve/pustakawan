@@ -1,5 +1,11 @@
 <?php
 ob_start();
+$error = $this->session->flashdata('error');
+if ($error) {
+  echo '<div class="alert alert-danger">';
+  echo $error;
+  echo '</div>'."\n";
+}
 ?>
 <div class="panel panel-default login-box">
 <div class="panel-heading">Fill username and password to login</div>

@@ -3,7 +3,7 @@ $page_title = 'User';
 ob_start();
 $info = $this->session->flashdata('info');
 if ($info) {
-  echo '<div class="alert alert-warning">';
+  echo '<div class="alert alert-success">';
   echo $info;
   echo '</div>'."\n";
 }
@@ -17,7 +17,7 @@ if ($error) {
 ?>
 <div class="panel panel-default">
   <div class="panel-body">
-    <form class="form-inline pull-left">
+    <form class="form-inline pull-left" method="get" action="<?php echo site_url('/user/listusers') ?>">
         <label for="keywords">Search: </label>
         <input type="text" class="form-control form-control-half" name="keywords" id="keywords" placeholder="Search user here" />
         <input type="submit" class="btn btn-primary" name="search" value="Search" />

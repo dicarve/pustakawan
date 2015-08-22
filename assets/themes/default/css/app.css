@@ -1,5 +1,6 @@
 body {
   background: url(../retina_wood.png);
+  position: relative;
 }
 
 table, .panel {
@@ -10,6 +11,7 @@ table, .panel {
   clear: both;
   padding-bottom: 5px;
   border-bottom: 1px #ddd solid;
+  font-size: 1.2em;
 }
 
 .doc-field {
@@ -30,4 +32,24 @@ table, .panel {
 
 .small-width {
   width: 5%;
+}
+
+.pad-left10 {
+  padding-left: 10px;
+}
+
+.pathfinder-image {
+  width: 150px;
+  max-width: 150px;
+  float: right;
+}
+
+.pathfinder-image-detail {
+  width: 150px;
+  max-width: 150px;
+  margin: 0 auto;  
+}
+
+#sidebar-nav .nav > li > a {
+  padding: 5px;
 }
