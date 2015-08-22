@@ -19,10 +19,17 @@ Installation
 3. Go to **install** folder and import/dump **install.sql** file to newly created database.
 4. Go to **application/config/** folder and open **database.php** file.
 5. Search for below lines and change it according to your database connection configuration :
+
 	'dsn'	=> 'mysql:host=localhost;dbname=pustakawan',
 	'hostname' => 'localhost',
 	'username' => 'pustakawan',
 	'password' => 'pathfinder',
 	'database' => 'pustakawan'
+	
 6  You may have to set *$config['sess_save_path']* variable in **application/config/config.php** file if CodeIgniter show session related error
 7. Open browser and navigate to your installation URL (example: http://localhost/pustakawan)
+8. The default account for administrator/librarian:
+
+	username : librarian
+	password : pathfinder
+	
