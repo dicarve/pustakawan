@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 21, 2015 at 03:04 AM
+-- Generation Time: Aug 23, 2015 at 04:57 PM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -38,7 +38,6 @@ CREATE TABLE IF NOT EXISTS `pst_config` (
 INSERT INTO `pst_config` (`config_name`, `config_val`) VALUES
 ('content.contact', 'a:2:{s:5:"title";s:17:"Contact Librarian";s:7:"content";s:32:"Arie Nugraha - dicarve@gmail.com";}'),
 ('content.homepage', 'a:2:{s:5:"title";s:20:"Homepage Information";s:7:"content";s:187:"Welcome to our Library subject guide. please feel free to contact our librarian if you have any question regarding your research topic information resources, we will be happy to help you!";}'),
-('pathfinder/2.hidden_type', 'a:6:{i:0;s:21:"Audio Recording/Music";i:1;s:12:"Book Section";i:2;s:22:"Conference Proceedings";i:3;s:12:"Dissertation";i:4;s:20:"Encyclopedia Article";i:5;s:4:"Film";}'),
 ('site_name', 's:21:"Library Subject Guide";');
 
 -- --------------------------------------------------------
@@ -60,7 +59,14 @@ CREATE TABLE IF NOT EXISTS `pst_pathfinder` (
   `image_filename` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `pst_pathfinder`
+--
+
+INSERT INTO `pst_pathfinder` (`id`, `title`, `category`, `subjects`, `subjects_array`, `description`, `target_users`, `scope`, `authors`, `image_filename`, `created`, `updated`) VALUES
+(3, 'Sample subject guide', 'Post Graduate', 'Metadata ; Reference Librarian ; Reference Service', 'a:3:{i:0;s:8:"Metadata";i:1;s:19:"Reference Librarian";i:2;s:17:"Reference Service";}', 'This guide is intended as an example. Mention the description of your subject guide here.', 'Postgraduate students', 'Scope of this guide', 'Administrator', 'Primer_Amanecer_2010_by_letoloke.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -73,6 +79,14 @@ CREATE TABLE IF NOT EXISTS `pst_pathfinder_resources` (
   `rid` int(11) NOT NULL,
   `created` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `pst_pathfinder_resources`
+--
+
+INSERT INTO `pst_pathfinder_resources` (`pid`, `rid`, `created`) VALUES
+(3, 1, '2015-08-21 23:45:32'),
+(3, 2, '2015-08-22 00:25:36');
 
 -- --------------------------------------------------------
 
@@ -94,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `pst_resource` (
   `subjects_array` text COLLATE utf8_unicode_ci,
   `publisher` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `publish_year` int(4) DEFAULT NULL,
-  `publish_date` date DEFAULT NULL,
+  `publish_place` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `url` text COLLATE utf8_unicode_ci,
   `doi_id` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `other_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -108,7 +122,14 @@ CREATE TABLE IF NOT EXISTS `pst_resource` (
   `image_filename` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `pst_resource`
+--
+
+INSERT INTO `pst_resource` (`id`, `title`, `series_title`, `format`, `language`, `type`, `classification`, `authors`, `authors_array`, `subjects`, `subjects_array`, `publisher`, `publish_year`, `publish_place`, `url`, `doi_id`, `other_id`, `isbn`, `issn`, `location`, `collation`, `abstract`, `notes`, `filename`, `image_filename`, `created`, `updated`) VALUES
+(2, 'Metadata for information management and retrieval', '', 'Printed', 'US English', 'Book', '025', 'Haynes, David', 'a:1:{i:0;s:13:"Haynes, David";}', 'Metadata', 'a:1:{i:0;s:8:"Metadata";}', 'Facet Publishing', 2004, 'Jakarta', '', '', '', '9781856044899', '', 'My Library', 'xiv, 186 p. ; 24 cm.', '', NULL, '', NULL, '0000-00-00 00:00:00', '2015-08-22 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -122,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `pst_taxonomy_term` (
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The term name.',
   `description` longtext COMMENT 'A description of the term.',
   `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The weight of this term in relation to other terms.'
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8 COMMENT='Stores term information.';
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COMMENT='Stores term information.';
 
 --
 -- Dumping data for table `pst_taxonomy_term`
@@ -156,8 +177,8 @@ INSERT INTO `pst_taxonomy_term` (`tid`, `vocabulary`, `name`, `description`, `we
 (28, 'Type', 'Film', NULL, 0),
 (29, 'Type', 'Audio Recording/Music', NULL, 0),
 (30, 'Type', 'Online Database', NULL, 0),
-(31, 'Format', 'Printed', NULL, 0),
-(32, 'Format', 'Digital', NULL, 0),
+(31, 'Format', 'Printed', NULL, -50),
+(32, 'Format', 'Digital', NULL, -49),
 (33, 'Format', 'Multimedia', NULL, 0),
 (34, 'Format', 'Analog', NULL, 0),
 (35, 'Author', 'Arie Nugraha', 'Arie Nugraha', -38),
@@ -170,10 +191,18 @@ INSERT INTO `pst_taxonomy_term` (`tid`, `vocabulary`, `name`, `description`, `we
 (42, 'Author', 'Utami Hariyadi', 'Utami Hariyadi', -50),
 (43, 'Author', 'Farli Elnumeri', 'Farli Elnumeri', -30),
 (44, 'Subject', 'Natural Language Processing', 'Natural Language Processing', -50),
-(45, 'Author', 'Moniruzzaman, A B M', 'Moniruzzaman, A B M', -50),
 (46, 'Subject', 'Database', 'Database', -50),
-(47, 'Author', 'Sharma, Meenakshi', 'Sharma, Meenakshi', -50),
-(48, 'Author', 'Suri, Pushpa', 'Suri, Pushpa', -50);
+(49, 'Subject', 'Metadata', 'Wakil singkat dari suatu sumber informasi', -50),
+(50, 'Author', 'Taylor, Arlene G.', '', -50),
+(51, 'Publisher', 'Wiley', 'Wiley', -50),
+(54, 'Publisher', 'Pearson', 'Pearson', -50),
+(55, 'Place', 'Jakarta', 'Indonesia', -50),
+(56, 'Author', 'Saffady, William', 'Saffady, William', -50),
+(57, 'Author', 'Rowley, Jennifer', 'Rowley, Jennifer', -50),
+(58, 'Language', 'US English', 'US English', -50),
+(59, 'Language', 'Bahasa Indonesia', 'Bahasa Indonesia', -50),
+(60, 'Author', 'Haynes, David', 'Haynes, David', -50),
+(61, 'Publisher', 'Facet Publishing', 'Facet Publishing', -50);
 
 -- --------------------------------------------------------
 
@@ -193,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `pst_taxonomy_term_hierarchy` (
 --
 
 CREATE TABLE IF NOT EXISTS `pst_users` (
-  `id` int(11) NOT NULL,
+`id` int(11) NOT NULL,
   `realname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `passwd` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -203,14 +232,14 @@ CREATE TABLE IF NOT EXISTS `pst_users` (
   `groups` text COLLATE utf8_unicode_ci,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `pst_users`
 --
 
 INSERT INTO `pst_users` (`id`, `realname`, `username`, `passwd`, `email`, `description`, `other_data`, `groups`, `created`, `updated`) VALUES
-(1, 'Administrator', 'librarian', '0e43650b148e1557def21ef7ae16ebd8f7c21ccfa676e0d9f64e042681855970', NULL, NULL, NULL, 'Librarian', '2015-08-20 00:00:00', '2015-08-20 00:00:00');
+(1, 'Administrator', 'librarian', '0e43650b148e1557def21ef7ae16ebd8f7c21ccfa676e0d9f64e042681855970', 'admin@pustakawan.or.id', NULL, NULL, 'Librarian', '2015-08-20 00:00:00', '2015-08-21 22:56:25');
 
 --
 -- Indexes for dumped tables
@@ -266,17 +295,22 @@ ALTER TABLE `pst_users`
 -- AUTO_INCREMENT for table `pst_pathfinder`
 --
 ALTER TABLE `pst_pathfinder`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `pst_resource`
 --
 ALTER TABLE `pst_resource`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `pst_taxonomy_term`
 --
 ALTER TABLE `pst_taxonomy_term`
-MODIFY `tid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique term ID.',AUTO_INCREMENT=49;
+MODIFY `tid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key: Unique term ID.',AUTO_INCREMENT=62;
+--
+-- AUTO_INCREMENT for table `pst_users`
+--
+ALTER TABLE `pst_users`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

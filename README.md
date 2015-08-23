@@ -25,8 +25,8 @@ Installation
 	'username' => 'pustakawan',
 	'password' => 'pathfinder',
 	'database' => 'pustakawan'
-	
-6  You may have to set *$config['sess_save_path']* variable in **application/config/config.php** file if CodeIgniter show session related error
+
+6. You may have to set *$config['sess_save_path']* variable in **application/config/config.php** file if CodeIgniter show session related error
 7. Open browser and navigate to your installation URL (example: http://localhost/pustakawan)
 8. The default account for administrator/librarian:
 
