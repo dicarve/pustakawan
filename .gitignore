@@ -1,3 +1,5 @@
 .DS_*
 .htacces
 application/config/database.php
+files/pathfinder/images/*
+files/pathfinder/repository/*

@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `pst_config` (
   `config_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `config_val` text COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `pst_config`
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `pst_pathfinder` (
   `image_filename` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `pst_pathfinder`
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `pst_pathfinder_resources` (
   `pid` int(11) NOT NULL,
   `rid` int(11) NOT NULL,
   `created` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `pst_pathfinder_resources`
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `pst_resource` (
   `image_filename` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `pst_resource`
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `pst_taxonomy_term` (
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'The term name.',
   `description` longtext COMMENT 'A description of the term.',
   `weight` int(11) NOT NULL DEFAULT '0' COMMENT 'The weight of this term in relation to other terms.'
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COMMENT='Stores term information.';
+) ENGINE=MyISAM AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COMMENT='Stores term information.';
 
 --
 -- Dumping data for table `pst_taxonomy_term`
@@ -213,7 +213,7 @@ INSERT INTO `pst_taxonomy_term` (`tid`, `vocabulary`, `name`, `description`, `we
 CREATE TABLE IF NOT EXISTS `pst_taxonomy_term_hierarchy` (
   `tid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Primary Key: The dipi_taxonomy_term_data.tid of the term.',
   `parent` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Primary Key: The dipi_taxonomy_term_data.tid of the term’s parent. 0 indicates no parent.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores the hierarchical relationship between terms.';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Stores the hierarchical relationship between terms.';
 
 -- --------------------------------------------------------
 
@@ -232,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `pst_users` (
   `groups` text COLLATE utf8_unicode_ci,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `pst_users`

@@ -36,8 +36,8 @@ ob_start();
 <?php echo create_bootstrap_input('text', 'target_users', array(), 'Target users', '', '', isset($record->target_users)?$record->target_users:'', '', 'Intended user type for this pathfinder') ?>
 <?php
   $subject_options = array();
-  if (isset($record->subjects_array) && $record->subjects_array) {
-    $subjects = unserialize($record->subjects_array);
+  $subjects = @unserialize($record->subjects_array);
+  if ($subjects) {
     foreach ($subjects as $subject) {
        $subject_options[$subject] = $subject;
     }
