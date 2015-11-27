@@ -170,6 +170,8 @@ class Pathfinder extends CI_Controller {
     if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
       redirect('/user');
     }
+    $error = null;
+    $subjects = null;
     $save_data = $this->input->post();
     $update_id = $this->input->post('update_ID');
     $hidden_type = $this->input->post('hidden_type');
@@ -179,9 +181,11 @@ class Pathfinder extends CI_Controller {
     unset($save_data['hidden_type']);
 
     // change the subject data array
-    $temp = $save_data['subjects'];
-    $save_data['subjects'] = implode(' ; ', $temp);
-    $save_data['subjects_array'] = serialize($temp);
+    if (isset($save_data['subjects']) && !empty($save_data['subjects'])) {
+      $temp = $save_data['subjects'];
+      $save_data['subjects'] = implode(' ; ', $temp);   
+      $save_data['subjects_array'] = serialize($temp);      
+    }
     
     // upload file if exists
     if ($_FILES['image_filename']['size'] > 0) {
@@ -208,13 +212,19 @@ class Pathfinder extends CI_Controller {
     
     if ($hidden_type) {
       $this->Pathfinder_model->setConfig('pathfinder/'.$update_id.'.hidden_type', $hidden_type);
+    } else if (empty($hidden_type)) {
+      $this->Pathfinder_model->setConfig('pathfinder/'.$update_id.'.hidden_type', null);
     }
     
     if ($error) {
       $this->session->set_flashdata('error', $error);  
     }
     $this->session->set_flashdata('save message', 'Pathfinder data successfully saved');
-    redirect('/pathfinder/index');
+    if ($update_id) {
+      redirect('/pathfinder/detail/'.$update_id);  
+    } else {
+      redirect('/pathfinder/index');  
+    }
   }
   
   public function add_resource_form($pathfinder_id)
