@@ -120,23 +120,20 @@ function radio_input($options = array(), $name, $default_value = '') {
   if ($options) {
     $r = 1;
     foreach ($options as $radio) {
+      $output .= '<div class="radio">';
       $output .= '<label class="label-radio"><input type="radio"';
       $output .= ' name="'.$name.'" id="'.$name.$r.'"';
-      if ($classes) {
-        $output .= ' class="form-control input-radio '.$radio['classes'].'"';  
-      } else {
-        $output .= ' class="form-control input-radio"';
-      }
-      if ($default_value) {
-        $output .= ' value="'.$radio['default_value'].'"';
-      }
-      if ($additional_attributes) {
+      $output .= ' class="input-radio '.( isset($radio['classes'])?$radio['classes']:'' ).'"';  
+      $output .= ' value="'.$radio['value'].'"';
+      
+      if (isset($radio['additional_attributes'])) {
         $output .= ' '.$radio['additional_attributes'];
       }
       if ($default_value && ($default_value == $radio['value'])) {
         $output .= ' checked';
       }
       $output .= '/> '.$radio['label'].'</label>';
+      $output .= '</div>';
       $r++;
     }
   }

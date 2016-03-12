@@ -55,6 +55,13 @@ if (isset($hidden_type) && $hidden_type) {
   
 <div class="col-md-12 pathfinder-resources-list">
 <?php
+// load bibliography list style if exists
+$biblio_tpl = './assets/themes/default/templates/biblio.style.php';
+if (file_exists($biblio_tpl)) {
+  include_once $biblio_tpl;
+} else {
+  include_once './assets/themes/default/templates/biblio-default.style.php';
+}
 foreach ($types as $type) {
   $normalized_names[$type->name] = strtolower(str_ireplace(array(' ', '/', '\\', '-', '@'), '_', $type->name));
   $total_rows = 0;
@@ -63,53 +70,33 @@ foreach ($types as $type) {
 <a name="<?php echo $normalized_names[$type->name]; ?>" id="<?php echo $normalized_names[$type->name]; ?>"></a>
 <div class="panel panel-primary resource-type">
   <div class="panel-heading">
-    <h3 class="panel-title"><?php echo $type->name ?></h3>
-  </div>
-  <div class="panel-body">
+    <h3 class="panel-title"><?php echo $type->name ?>
     <?php if ($logged_in && $group == 'Librarian') : ?>
-    <p>
+    <div>
       <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-          Resource <span class="caret"></span>
-        </button>
+        <a type="button" class="btn btn-warning btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          Manage <span class="caret"></span>
+        </a>
         <ul class="dropdown-menu" role="menu">
           <li><a class="add-resource-btn"
             data-title="Add Resource (<?php echo $type->name ?>)"
-            href="<?php echo site_url('/pathfinder/add_resource_form/'.$pathfinder->id) ?>?type=<?php echo urlencode($type->name) ?>">Add from Existing Resource</a></li>
-          <li><a href="<?php echo site_url('/resource/add/'.$pathfinder->id.'/'.$type->tid) ?>">Add from New Resource</a></li>
+            href="<?php echo site_url('/pathfinder/add_resource_form/'.$pathfinder->id) ?>?type=<?php echo urlencode($type->name) ?>">Add resource from existing records</a></li>
+          <li><a href="<?php echo site_url('/resource/add/'.$pathfinder->id.'/'.$type->tid) ?>">Add new resource</a></li>
+          <li><a href="<?php echo site_url('/pathfinder/set_config/visibility/'.$pathfinder->id.'/'.$type->tid) ?>" data-confirm="Are you sure want to hide this resource type?"><i class="glyphicon glyphicon-eye-close"></i> Hide this resource type</a></li>
         </ul>
       </div>
-      
-      <a href="<?php echo site_url('/pathfinder/set_config/visibility/'.$pathfinder->id.'/'.$type->tid) ?>" class="btn btn-sm btn-warning" data-confirm="Are you sure want to hide this resource type?"><i class="glyphicon glyphicon-eye-close"></i> Hide this type</a>
-    </p>
+    </div>
     <?php endif; ?>
+    </h3>
+  </div>
+  <div class="panel-body">
     <?php
     if ($total_rows) {
       foreach ($resources as $doc) {
-        echo '<p class="doc">';
-        echo '<span class="doc-field doc-title"><a href="'.site_url('/resource/detail/'.$doc->id).'">'.$doc->title.'</a></span>';
-        echo '<span class="doc-field doc-author pad-left10">Author(s): '.$doc->authors.'</span>';
-        echo '<span class="doc-field doc-year pad-left10">Publish year: '.$doc->publish_year.'</span>';
-        if ($doc->location) {
-          echo '<span class="doc-field doc-url pad-left10">Resource location: '.$doc->location.'</span>';  
-        }
-        if ($doc->url) {
-          echo '<span class="doc-field doc-url pad-left10">URL: <a href="'.$doc->url.'" target="_blank">'.$doc->url.'</a></span>';  
-        }
-        echo '<span class="doc-field doc-buttons">';
-        echo '<a class="btn btn-sm btn-info resource-detail-btn" title="View Detail"
-          href="'.site_url('/resource/detail/'.$doc->id).'"><i class="glyphicon glyphicon-book"></i> Detail</a> ';
-        if ($logged_in && $group == 'Librarian') {
-          echo '<a class="btn btn-sm btn-warning" title="Edit this resource from this pathfinder" 
-            href="'.site_url('/resource/update/'.$doc->id).'"><i class="glyphicon glyphicon-pencil"></i> Edit Resource Data</a> ';
-          echo '<a class="btn btn-sm btn-danger" title="Remove this resource from this pathfinder" data-confirm="Are you sure want to remove this resource from this pathfinder?"
-            href="'.site_url('/pathfinder/remove_resource/'.$pathfinder->id.'/'.$doc->id).'"><i class="glyphicon glyphicon-trash"></i></a>';
-        }
-        echo '</span>';
-        echo '</p>';
+        biblio_style($pathfinder, $doc, $logged_in, $group);
       }
     } else {
-      echo 'No data for this type of resource';
+      echo 'No data yet for this type of resource';
     }
     ?>
   </div>

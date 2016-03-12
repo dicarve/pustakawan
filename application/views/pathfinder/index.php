@@ -3,6 +3,12 @@ ob_start();
 
 // sidebar to show category list
 ob_start();
+$site_logo = $this->Pathfinder_model->getConfig('site_logo');
+if ($site_logo) {
+  echo '<div class="site-logo text-center"><img src="'.base_url('files/pathfinder/images').'/'.$site_logo.'" class="img-responsive" /></div>';  
+} else {
+  echo '<div class="site-logo text-center"><img src="'.base_url('files/pathfinder/images').'/logo.png" class="img-responsive" /></div>';  
+}
 ?>
 <h3 class="sidebar-header">Category</h3>
 <ul class="nav nav-sidebar">

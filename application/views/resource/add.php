@@ -49,8 +49,26 @@ ob_start();
 <?php echo create_bootstrap_input('text', 'classification', null, 'Classification', '', '', isset($record->classification)?$record->classification:'', '', 'Give one or more in comma separated classification code in DDC, UDC or LC format related to this Subject') ?>
 <?php echo create_bootstrap_input('select', 'location', $this->Taxonomy_model->getForSelect('location', 100, true), 'Resource Location', 'chosen-ajax', '', isset($record->location)?$record->location:'', 'data-ajax-source="'.site_url('/taxonomy/ajax/location').'"', 'Name of place where this resource located') ?>
 <?php echo create_bootstrap_input('text', 'publish_year', null, 'Publish year', '', '', isset($record->publish_year)?$record->publish_year:'', '', 'Year of publication of this resource') ?>
-<?php echo create_bootstrap_input('select', 'publisher', $this->Taxonomy_model->getForSelect('publisher', 100, true), 'Publisher', 'chosen-ajax', '', isset($record->publisher)?$record->publisher:'', 'data-ajax-source="'.site_url('/taxonomy/ajax/publisher').'"', 'Name of publisher for this resource') ?>
-<?php echo create_bootstrap_input('select', 'publish_place', $this->Taxonomy_model->getForSelect('place', 100, true), 'Publish Place', 'chosen-ajax', '', isset($record->publish_place)?$record->publish_place:'', 'data-ajax-source="'.site_url('/taxonomy/ajax/place').'"', 'Name of publisher for this resource') ?>
+<?php
+   // echo create_bootstrap_input('select', 'publisher', $this->Taxonomy_model->getForSelect('publisher', 100, true), 'Publisher', 'chosen-ajax', '', isset($record->publisher)?$record->publisher:'', 'data-ajax-source="'.site_url('/taxonomy/ajax/publisher').'"', 'Name of publisher for this resource')
+   $publisher_options = array();
+   if (isset($record->publisher) && $record->publisher) {
+      $publisher_options[$record->publisher] = $record->publisher;
+   } else {
+      $publisher_options[''] = 'Select Publisher';
+   }
+   echo create_bootstrap_input('select', 'publisher', $publisher_options, 'Publisher', 'chosen-ajax', '', isset($record->publisher)?$record->publisher:'', 'data-ajax-source="'.site_url('/taxonomy/ajax/publisher').'"', 'Name of publisher for this resource');
+?>
+<?php
+   // echo create_bootstrap_input('select', 'publish_place', $this->Taxonomy_model->getForSelect('place', 100, true), 'Publish Place', 'chosen-ajax', '', isset($record->publish_place)?$record->publish_place:'', 'data-ajax-source="'.site_url('/taxonomy/ajax/place').'"', 'Name of publisher for this resource');
+   $publish_place_options = array();
+   if (isset($record->publish_place) && $record->publish_place) {
+      $publish_place_options[$record->publish_place] = $record->publish_place;
+   } else {
+      $publish_place_options[''] = 'Select Publish Place';
+   }
+   echo create_bootstrap_input('select', 'publish_place', $publish_place_options, 'Publish Place', 'chosen-ajax', '', isset($record->publish_place)?$record->publish_place:'', 'data-ajax-source="'.site_url('/taxonomy/ajax/place').'"', 'Name of publisher for this resource');
+   ?>
 <?php echo create_bootstrap_input('select', 'format', $this->Taxonomy_model->getForSelect('format', 100, true), 'Format', '', '', isset($record->format)?$record->format:'', '', 'Format of this resource') ?>
 <?php echo create_bootstrap_input('select', 'language', $this->Taxonomy_model->getForSelect('language', 100, true), 'Language', '', '', isset($record->language)?$record->language:'', '', 'Language of this resource content') ?>
 <?php echo create_bootstrap_input('text', 'collation', null, 'Collation/Physical Description', '', '', isset($record->collation)?$record->collation:'', '', 'Physical description of this resource such as page numbers') ?>

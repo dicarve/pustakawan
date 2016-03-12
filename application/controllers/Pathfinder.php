@@ -98,6 +98,20 @@ class Pathfinder extends CI_Controller {
       $content_homepage['title'] = 'Homepage Information';
       $content_homepage['content'] = $homepage;
       $this->Pathfinder_model->setConfig('content.homepage', $content_homepage);
+      if ($_FILES['site_logo']['size'] > 0) {
+        $config['upload_path']          = './pathfinder/images';
+        $config['allowed_types']        = 'gif|jpg|png|jpeg';
+        $config['file_ext_tolower']     = true;
+        $config['max_size']             = 2048 ;
+        
+        $this->load->library('upload', $config);
+        
+        if (!$this->upload->do_upload('site_logo')) {
+          $error = 'File failed to upload, probably because of size too big or wrong file type';
+        } else {
+          $this->Pathfinder_model->setConfig('site_logo', $this->upload->data('file_name'));
+        } 
+      }
     }
     $this->data['main_title'] = 'Pathfinder Configuration';
     $this->load->view('pathfinder/config', $this->data);
