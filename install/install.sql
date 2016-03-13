@@ -10,7 +10,7 @@ CREATE TABLE `pst_config` (
   `config_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `config_val` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`config_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `pst_config` (`config_name`, `config_val`) VALUES
 ('content.contact',	'a:2:{s:5:\"title\";s:17:\"Contact Librarian\";s:7:\"content\";s:32:\"Arie Nugraha - dicarve@gmail.com\";}'),
@@ -36,7 +36,7 @@ CREATE TABLE `pst_pathfinder` (
   PRIMARY KEY (`id`),
   KEY `category` (`category`),
   FULLTEXT KEY `FT_SEARCH` (`title`,`subjects`,`description`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `pst_pathfinder` (`id`, `title`, `category`, `subjects`, `subjects_array`, `description`, `target_users`, `scope`, `authors`, `image_filename`, `promoted`, `weight`, `created`, `updated`) VALUES
 (1,	'Sample subject guide',	'Post Graduate',	'Metadata ; Reference Librarian ; Reference Service',	'a:3:{i:0;s:8:\"Metadata\";i:1;s:19:\"Reference Librarian\";i:2;s:17:\"Reference Service\";}',	'This guide is intended as an example. Mention the description of your subject guide here.',	'Postgraduate students',	'Scope of this guide',	'Administrator',	'Primer_Amanecer_2010_by_letoloke.jpg',	0,	0,	'0000-00-00 00:00:00',	'0000-00-00 00:00:00');
@@ -47,7 +47,7 @@ CREATE TABLE `pst_pathfinder_resources` (
   `rid` int(11) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`pid`,`rid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `pst_pathfinder_resources` (`pid`, `rid`, `created`) VALUES
 (1,	1,	'2015-08-21 23:45:32');
@@ -86,7 +86,7 @@ CREATE TABLE `pst_resource` (
   KEY `type` (`type`),
   KEY `doi_id` (`doi_id`),
   FULLTEXT KEY `FT_SEARCH_RES` (`title`,`series_title`,`authors`,`subjects`,`abstract`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `pst_resource` (`id`, `title`, `series_title`, `format`, `language`, `type`, `classification`, `authors`, `authors_array`, `subjects`, `subjects_array`, `publisher`, `publish_year`, `publish_place`, `url`, `doi_id`, `other_id`, `isbn`, `issn`, `location`, `collation`, `abstract`, `notes`, `filename`, `image_filename`, `created`, `updated`) VALUES
 (1,	'Metadata for information management and retrieval',	'',	'Printed',	'US English',	'Book',	'025',	'Haynes, David',	'a:1:{i:0;s:13:\"Haynes, David\";}',	'Metadata',	'a:1:{i:0;s:8:\"Metadata\";}',	'Facet Publishing',	2004,	'Jakarta',	'',	'',	'',	'9781856044899',	'',	'My Library',	'xiv, 186 p. ; 24 cm.',	'',	NULL,	'',	NULL,	'0000-00-00 00:00:00',	'2015-08-22 00:00:00');
@@ -98,7 +98,7 @@ CREATE TABLE `pst_sessions` (
   `timestamp` int(10) unsigned NOT NULL DEFAULT '0',
   `data` blob NOT NULL,
   KEY `sessions_timestamp` (`timestamp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 DROP TABLE IF EXISTS `pst_taxonomy_term`;
@@ -176,7 +176,7 @@ CREATE TABLE `pst_taxonomy_term_hierarchy` (
   `parent` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Primary Key: The dipi_taxonomy_term_data.tid of the term’s parent. 0 indicates no parent.',
   PRIMARY KEY (`tid`,`parent`),
   KEY `parent` (`parent`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Stores the hierarchical relationship between terms.';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Stores the hierarchical relationship between terms.';
 
 
 DROP TABLE IF EXISTS `pst_users`;
@@ -193,7 +193,7 @@ CREATE TABLE `pst_users` (
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `pst_users` (`id`, `realname`, `username`, `passwd`, `email`, `description`, `other_data`, `groups`, `created`, `updated`) VALUES
 (1,	'Administrator',	'librarian',	'0e43650b148e1557def21ef7ae16ebd8f7c21ccfa676e0d9f64e042681855970',	'admin@pustakawan.or.id',	NULL,	NULL,	'Librarian',	'2015-08-20 00:00:00',	'2015-08-21 22:56:25');
