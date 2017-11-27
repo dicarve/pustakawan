@@ -92,9 +92,11 @@ foreach ($types as $type) {
   <div class="panel-body">
     <?php
     if ($total_rows) {
+      biblio_style_header($pathfinder, $logged_in, $group);
       foreach ($resources as $doc) {
         biblio_style($pathfinder, $doc, $logged_in, $group);
       }
+      biblio_style_footer($pathfinder, $logged_in, $group);
     } else {
       echo 'No data yet for this type of resource';
     }

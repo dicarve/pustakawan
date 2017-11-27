@@ -1,7 +1,19 @@
 <?php
+function biblio_style_header($pathfinder, $logged_in, $group) {
+  ?>
+  <ul class="list-group">
+  <?php
+}
+
+function biblio_style_footer($pathfinder, $logged_in, $group) {
+  ?>
+  </ul>
+  <?php
+}
+
 function biblio_style($pathfinder, $doc, $logged_in, $group) {
-    ?>
-    <div class="doc">
+  ?>
+  <li class="list-group-item doc">
     <span class="doc-field doc-title"><a href="<?php print site_url('/resource/detail/'.$doc->id) ?>"><?php print $doc->title ?></a></span>
     <div>
         <span class="doc-field doc-author"><strong>Author(s):</strong> <?php print $doc->authors ?></span> &mdash;
@@ -27,5 +39,5 @@ function biblio_style($pathfinder, $doc, $logged_in, $group) {
         }
         ?>
     </div>
-    </div>
+  </li>
 <?php }

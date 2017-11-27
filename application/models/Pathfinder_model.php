@@ -50,6 +50,8 @@ class Pathfinder_model extends CI_Model {
           $this->db->where($criteria);
         }
       }
+      // sort by latest update
+      $this->db->order_by('created', 'DESC');
       $total_result = $this->db->get('pathfinder');
       $total_data = $total_result->row();
       $total_rows = $total_data->total;

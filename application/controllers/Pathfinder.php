@@ -184,9 +184,11 @@ class Pathfinder extends CI_Controller {
     if (!($this->data['logged_in'] && $this->data['group'] == 'Librarian')) {
       redirect('/user');
     }
+    $date = new DateTime();
     $error = null;
     $subjects = null;
     $save_data = $this->input->post();
+    $save_data['created'] = $date->format('Y-m-d H:i:s');
     $update_id = $this->input->post('update_ID');
     $hidden_type = $this->input->post('hidden_type');
     // remove non fields element
@@ -205,7 +207,7 @@ class Pathfinder extends CI_Controller {
     if ($_FILES['image_filename']['size'] > 0) {
       $config['upload_path']          = './files/pathfinder/images';
       $config['allowed_types']        = 'gif|jpg|png';
-      $config['max_size']             = 100;
+      $config['max_size']             = 500;
       
       $this->load->library('upload', $config);
       
